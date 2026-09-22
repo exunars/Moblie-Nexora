@@ -707,6 +707,74 @@ class AppStrings {
         'en': 'Failed to open Telegram',
         'uk': 'Не вдалося відкрити Telegram'
       },
+      'setup_2fa': {
+        'ru': 'Настройка 2FA',
+        'en': 'Set up 2FA',
+        'uk': 'Налаштування 2FA'
+      },
+      'disable_2fa': {
+        'ru': 'Отключить 2FA',
+        'en': 'Disable 2FA',
+        'uk': 'Вимкнути 2FA'
+      },
+      'google_authenticator': {
+        'ru': 'Google Authenticator',
+        'en': 'Google Authenticator',
+        'uk': 'Google Authenticator'
+      },
+      'scan_qr_hint': {
+        'ru': 'Отсканируйте QR-код в приложении Google Authenticator',
+        'en': 'Scan the QR code in Google Authenticator',
+        'uk': 'Відскануйте QR-код у Google Authenticator'
+      },
+      'enter_code_6': {
+        'ru': 'Введите 6-значный код из приложения',
+        'en': 'Enter the 6-digit code from the app',
+        'uk': 'Введіть 6-значний код із застосунку'
+      },
+      'code_invalid': {
+        'ru': 'Неверный код, попробуйте снова',
+        'en': 'Invalid code, try again',
+        'uk': 'Невірний код, спробуйте знову'
+      },
+      'code_verified': {
+        'ru': '2FA успешно включена!',
+        'en': '2FA enabled successfully!',
+        'uk': '2FA успішно увімкнено!'
+      },
+      'two_fa_disabled': {
+        'ru': '2FA отключена',
+        'en': '2FA disabled',
+        'uk': '2FA вимкнено'
+      },
+      'step_install_app': {
+        'ru': '1. Установите Google Authenticator',
+        'en': '1. Install Google Authenticator',
+        'uk': '1. Встановіть Google Authenticator'
+      },
+      'step_scan_qr': {
+        'ru': '2. Отсканируйте QR-код',
+        'en': '2. Scan the QR code',
+        'uk': '2. Відскануйте QR-код'
+      },
+      'step_enter_code': {
+        'ru': '3. Введите код подтверждения',
+        'en': '3. Enter verification code',
+        'uk': '3. Введіть код підтвердження'
+      },
+      'secret_key': {
+        'ru': 'Секретный ключ',
+        'en': 'Secret key',
+        'uk': 'Секретний ключ'
+      },
+      'copy': {'ru': 'Копировать', 'en': 'Copy', 'uk': 'Копіювати'},
+      'copied': {'ru': 'Скопировано', 'en': 'Copied', 'uk': 'Скопійовано'},
+      'confirm': {'ru': 'Подтвердить', 'en': 'Confirm', 'uk': 'Підтвердити'},
+      'verification_code': {
+        'ru': 'Код подтверждения',
+        'en': 'Verification code',
+        'uk': 'Код підтвердження'
+      },
     };
     return values[key]?[locale.languageCode] ?? values[key]?['ru'] ?? key;
   }

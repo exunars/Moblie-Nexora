@@ -199,7 +199,7 @@ class _MainScreenState extends State<MainScreen> {
   List<Widget> _buildPages() => [
     HomeScreen(
         locale: widget.locale,
-        onOpenSettings: () => setState(() => _currentIndex = 6)),
+        onNavigate: (index) => setState(() => _currentIndex = index)),
     BotsScreen(locale: widget.locale),
     HistoryOverviewScreen(locale: widget.locale),
     BacktestsScreen(locale: widget.locale),

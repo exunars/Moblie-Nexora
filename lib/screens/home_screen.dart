@@ -6,9 +6,9 @@ import '../theme/trade_theme.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen(
-      {super.key, required this.onOpenSettings, required this.locale});
+      {super.key, required this.onNavigate, required this.locale});
 
-  final VoidCallback onOpenSettings;
+  final ValueChanged<int> onNavigate;
   final Locale locale;
 
   @override
@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final _marketScrollController = ScrollController();
 
-  VoidCallback get onOpenSettings => widget.onOpenSettings;
+  ValueChanged<int> get onNavigate => widget.onNavigate;
   Locale get locale => widget.locale;
 
   @override
@@ -197,23 +197,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 12),
             _step(context, '1', strings.get('create_paper_bot'),
-                strings.get('paper_bot_description'), strings.get('create')),
+                strings.get('paper_bot_description'), strings.get('create'),
+                () => onNavigate(1)),
             const SizedBox(height: 7),
             _step(context, '2', strings.get('protect_account'),
-                strings.get('two_fa_description'), strings.get('enable')),
+                strings.get('two_fa_description'), strings.get('enable'),
+                () => onNavigate(6)),
             const SizedBox(height: 7),
             _step(
                 context,
                 '3',
                 strings.get('connect_exchange'),
                 strings.get('connect_exchange_description'),
-                strings.get('connect')),
+                strings.get('connect'),
+                () => onNavigate(6)),
           ]),
         ),
       );
 
   Widget _step(BuildContext context, String number, String title,
-          String description, String action) =>
+          String description, String action, VoidCallback onTap) =>
       Container(
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
@@ -240,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ?.copyWith(fontSize: 13))),
             const SizedBox(width: 8),
             OutlinedButton(
-                onPressed: () => _openSettings(context), child: Text(action)),
+                onPressed: onTap, child: Text(action)),
           ]),
           const SizedBox(height: 3),
           Padding(
@@ -262,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 22),
             TextButton.icon(
-                onPressed: () => _openSettings(context),
+                onPressed: () => onNavigate(6),
                 icon: const Icon(Icons.link_rounded, size: 16),
                 label: Text(AppStrings(locale).get('connect'))),
           ]),
@@ -359,8 +362,6 @@ class _HomeScreenState extends State<HomeScreen> {
             border: Border.all(color: TradeColors.border)),
         child: child,
       );
-
-  void _openSettings(BuildContext context) => onOpenSettings();
 }
 
 class _StatData {

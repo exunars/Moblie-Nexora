@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../services/app_strings.dart';
 import '../theme/trade_theme.dart';
 
@@ -306,35 +307,187 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _showTwoFactorDialog() async {
-    var enabled = _twoFactorEnabled;
-    await showDialog<void>(
+    if (_twoFactorEnabled) {
+      // Already enabled — offer to disable
+      final disable = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(_strings.get('disable_2fa')),
+          content: Text(_strings.get('two_fa_hint')),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(_strings.get('cancel'))),
+            FilledButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: Text(_strings.get('disable_2fa'))),
+          ],
+        ),
+      );
+      if (disable == true) {
+        setState(() => _twoFactorEnabled = false);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(_strings.get('two_fa_disabled'))));
+      }
+      return;
+    }
+
+    // Enable flow — Google Authenticator setup
+    const demoSecret = 'JBSWY3DPEHPK3PXP';
+    final codeController = TextEditingController();
+    String? codeError;
+
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: Text(_strings.get('security_2fa')),
-          content: Column(mainAxisSize: MainAxisSize.min, children: [
-            Text(_strings.get('two_fa_hint')),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(_strings.get('enable_2fa')),
-              value: enabled,
-              onChanged: (value) => setDialogState(() => enabled = value),
+          title: Text(_strings.get('setup_2fa')),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Step 1
+                Text(_strings.get('step_install_app'),
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 4),
+                Text(_strings.get('google_authenticator'),
+                    style: const TextStyle(color: TradeColors.secondaryText)),
+                const SizedBox(height: 16),
+
+                // Step 2 — QR placeholder
+                Text(_strings.get('step_scan_qr'),
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                Center(
+                  child: Container(
+                    width: 180,
+                    height: 180,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: TradeColors.border),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.qr_code_2_rounded,
+                            size: 100, color: Colors.grey.shade800),
+                        const SizedBox(height: 6),
+                        Text('NEXORA',
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.grey.shade600)),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(_strings.get('scan_qr_hint'),
+                    style: const TextStyle(
+                        color: TradeColors.secondaryText, fontSize: 12)),
+                const SizedBox(height: 8),
+
+                // Secret key row
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: TradeColors.surface,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: TradeColors.border),
+                  ),
+                  child: Row(children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_strings.get('secret_key'),
+                              style: const TextStyle(
+                                  fontSize: 10,
+                                  color: TradeColors.secondaryText)),
+                          const SizedBox(height: 2),
+                          const SelectableText(demoSecret,
+                              style: TextStyle(
+                                  fontFamily: 'monospace',
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13,
+                                  letterSpacing: 1.5)),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.copy_rounded, size: 18),
+                      tooltip: _strings.get('copy'),
+                      onPressed: () {
+                        Clipboard.setData(
+                            const ClipboardData(text: demoSecret));
+                        ScaffoldMessenger.of(dialogContext).showSnackBar(
+                            SnackBar(
+                                content: Text(_strings.get('copied')),
+                                duration: const Duration(seconds: 1)));
+                      },
+                    ),
+                  ]),
+                ),
+                const SizedBox(height: 16),
+
+                // Step 3 — verification code
+                Text(_strings.get('step_enter_code'),
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: codeController,
+                  keyboardType: TextInputType.number,
+                  maxLength: 6,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 8),
+                  decoration: InputDecoration(
+                    counterText: '',
+                    labelText: _strings.get('verification_code'),
+                    errorText: codeError,
+                    prefixIcon: const Icon(Icons.lock_clock_outlined),
+                  ),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  onChanged: (_) =>
+                      setDialogState(() => codeError = null),
+                ),
+              ],
             ),
-          ]),
+          ),
           actions: [
             TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
+                onPressed: () => Navigator.pop(dialogContext, false),
                 child: Text(_strings.get('cancel'))),
             FilledButton(
-                onPressed: () {
-                  setState(() => _twoFactorEnabled = enabled);
-                  Navigator.pop(dialogContext);
-                },
-                child: Text(_strings.get('save'))),
+              onPressed: () {
+                final code = codeController.text.trim();
+                if (code.length == 6) {
+                  Navigator.pop(dialogContext, true);
+                } else {
+                  setDialogState(
+                      () => codeError = _strings.get('code_invalid'));
+                }
+              },
+              child: Text(_strings.get('confirm')),
+            ),
           ],
         ),
       ),
     );
+    codeController.dispose();
+
+    if (confirmed == true) {
+      setState(() => _twoFactorEnabled = true);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(_strings.get('code_verified'))));
+    }
   }
 
   Future<void> _showLanguageDialog() async {
