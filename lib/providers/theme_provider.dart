@@ -16,48 +16,52 @@ enum AppAccent {
   final String label;
 }
 
-/// Ready-made presets — each has a palette + accent
+/// Ready-made presets — each has dark + light palettes + accent
 class AppPreset {
-  const AppPreset(this.id, this.nameRu, this.nameEn, this.accent, this.palette, this.gradient);
+  const AppPreset(this.id, this.nameRu, this.nameEn, this.accent, this.darkPalette, this.lightPalette, this.gradient);
   final String id;
   final String nameRu;
   final String nameEn;
   final AppAccent accent;
-  final AppPalette palette; // full app colors
-  final List<Color> gradient; // for preview card
+  final AppPalette darkPalette;
+  final AppPalette lightPalette;
+  final List<Color> gradient;
   String label(String lang) => lang == 'ru' ? nameRu : nameEn;
+  AppPalette paletteFor(Brightness b) => b == Brightness.dark ? darkPalette : lightPalette;
+  // backward compat
+  AppPalette get palette => darkPalette;
 
   static const presets = [
-    // Глубокий премиальный тёмный — фиолетовый отлив, дорогой вид
     AppPreset('midnight', 'Полночь', 'Midnight', AppAccent.purple,
         AppPalette(background: Color(0xFF0A0C14), surface: Color(0xFF12141F), card: Color(0xFF1C1E2E), border: Color(0xFF2E3350), primaryText: Color(0xFFFFFFFF), secondaryText: Color(0xFFB8BFDB), tertiaryText: Color(0xFF6E7696)),
+        AppPalette(background: Color(0xFFF0F1F8), surface: Color(0xFFFFFFFF), card: Color(0xFFFFFFFF), border: Color(0xFFDDD9F0), primaryText: Color(0xFF1A1C2E), secondaryText: Color(0xFF6B6E8A), tertiaryText: Color(0xFF9A9CBB)),
         [Color(0xFF1B1E35), Color(0xFF3B2F6B)]),
-    // Тёплый тёмно-синий океан с бирюзовым — свежо и технологично
     AppPreset('ocean', 'Океан', 'Ocean', AppAccent.cyan,
         AppPalette(background: Color(0xFF07121E), surface: Color(0xFF0E1E32), card: Color(0xFF152A45), border: Color(0xFF1E3F62), primaryText: Color(0xFFE6F2FF), secondaryText: Color(0xFF8FB4D6), tertiaryText: Color(0xFF5C84AA)),
+        AppPalette(background: Color(0xFFEEF6FA), surface: Color(0xFFFFFFFF), card: Color(0xFFFFFFFF), border: Color(0xFFC8DDE8), primaryText: Color(0xFF0E1E32), secondaryText: Color(0xFF5A7A8E), tertiaryText: Color(0xFF8AB4C8)),
         [Color(0xFF0B2E4A), Color(0xFF1AB2C0)]),
-    // Глубокий изумрудный — богатство, рост
     AppPreset('forest', 'Лес', 'Forest', AppAccent.lime,
         AppPalette(background: Color(0xFF09140E), surface: Color(0xFF132619), card: Color(0xFF1B3624), border: Color(0xFF28543A), primaryText: Color(0xFFE6F5EA), secondaryText: Color(0xFF8EC0A0), tertiaryText: Color(0xFF5E9A78)),
+        AppPalette(background: Color(0xFFEEF6F0), surface: Color(0xFFFFFFFF), card: Color(0xFFFFFFFF), border: Color(0xFFC8DDD0), primaryText: Color(0xFF132619), secondaryText: Color(0xFF5A7A64), tertiaryText: Color(0xFF8EC0A0)),
         [Color(0xFF143D22), Color(0xFF2EB872)]),
-    // Тёплый графитовый закат — уютный, премиальный
     AppPreset('sunset', 'Закат', 'Sunset', AppAccent.orange,
         AppPalette(background: Color(0xFF1A120E), surface: Color(0xFF2A1E16), card: Color(0xFF3D2A1C), border: Color(0xFF5A3D2A), primaryText: Color(0xFFFFF1E6), secondaryText: Color(0xFFD4B49A), tertiaryText: Color(0xFF9A7A62)),
+        AppPalette(background: Color(0xFFFFF4EE), surface: Color(0xFFFFFFFF), card: Color(0xFFFFFFFF), border: Color(0xFFE8D5C8), primaryText: Color(0xFF2A1E16), secondaryText: Color(0xFF8A6E5A), tertiaryText: Color(0xFFBFA090)),
         [Color(0xFF4E2310), Color(0xFFFF7A45)]),
-    // Тёмная слива/ягода — элегантно и необычно
     AppPreset('berry', 'Ягода', 'Berry', AppAccent.pink,
         AppPalette(background: Color(0xFF160E1A), surface: Color(0xFF241530), card: Color(0xFF341E42), border: Color(0xFF5A2E6B), primaryText: Color(0xFFFBE8FF), secondaryText: Color(0xFFD4A6DF), tertiaryText: Color(0xFF9A6EAF)),
+        AppPalette(background: Color(0xFFFBF0FF), surface: Color(0xFFFFFFFF), card: Color(0xFFFFFFFF), border: Color(0xFFE4C8F0), primaryText: Color(0xFF241530), secondaryText: Color(0xFF8A6E8A), tertiaryText: Color(0xFFB894C8)),
         [Color(0xFF402050), Color(0xFFD65DB1)]),
-    // Холодный арктический индиго — чистый, технологичный
     AppPreset('arctic', 'Арктика', 'Arctic', AppAccent.blue,
         AppPalette(background: Color(0xFF0C1326), surface: Color(0xFF151F3A), card: Color(0xFF1E2D52), border: Color(0xFF2D4273), primaryText: Color(0xFFE8EEFF), secondaryText: Color(0xFF94AAD6), tertiaryText: Color(0xFF627AAF)),
+        AppPalette(background: Color(0xFFEEF2FF), surface: Color(0xFFFFFFFF), card: Color(0xFFFFFFFF), border: Color(0xFFC8D4F0), primaryText: Color(0xFF151F3A), secondaryText: Color(0xFF5A6E9A), tertiaryText: Color(0xFF94AAD6)),
         [Color(0xFF1A2F5C), Color(0xFF5B8DEF)]),
-    // Чистый светлый — воздушный, современный
     AppPreset('light', 'Светлая', 'Light', AppAccent.purple,
+        AppPalette(background: Color(0xFF141422), surface: Color(0xFF1E1E32), card: Color(0xFF2A2A44), border: Color(0xFF3A3A5A), primaryText: Color(0xFFFFFFFF), secondaryText: Color(0xFFC8C8E8), tertiaryText: Color(0xFF8A8AC0)),
         AppPalette(background: Color(0xFFF2F4FA), surface: Color(0xFFFFFFFF), card: Color(0xFFFFFFFF), border: Color(0xFFDFE4F0), primaryText: Color(0xFF15182A), secondaryText: Color(0xFF6B7280), tertiaryText: Color(0xFF9CA3AF)),
         [Color(0xFFE8ECF8), Color(0xFF9A8CFF)]),
-    // Тёплый крем/песок — мягкий светлый
     AppPreset('sand', 'Песок', 'Sand', AppAccent.orange,
+        AppPalette(background: Color(0xFF1A150E), surface: Color(0xFF2A2418), card: Color(0xFF3A3224), border: Color(0xFF4E4430), primaryText: Color(0xFFFFF8EE), secondaryText: Color(0xFFD4C4A8), tertiaryText: Color(0xFF9A8A6E)),
         AppPalette(background: Color(0xFFFAF7F2), surface: Color(0xFFF5EDE2), card: Color(0xFFFFFFFF), border: Color(0xFFE6DDD0), primaryText: Color(0xFF2B1E12), secondaryText: Color(0xFF8A7A68), tertiaryText: Color(0xFFAB9A88)),
         [Color(0xFFE8DDC6), Color(0xFFD4A574)]),
   ];
@@ -127,11 +131,6 @@ class ThemeProvider extends ChangeNotifier {
   void setPreset(AppPreset pr) {
     _preset = pr;
     _accent = pr.accent;
-    if (pr.id == 'light' || pr.id == 'sand') {
-      _mode = ThemeMode.light;
-    } else {
-      _mode = ThemeMode.dark;
-    }
     _save();
     notifyListeners();
   }

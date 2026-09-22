@@ -52,8 +52,10 @@ class _MyAppState extends State<MyApp> {
           final isDark = tp.mode == ThemeMode.dark ||
               (tp.mode == ThemeMode.system &&
                   MediaQuery.platformBrightnessOf(context) == Brightness.dark);
-          // update system chrome on theme change
-          final bg = tp.preset.palette.background;
+          // palettes per mode — each preset now has dark+light
+          final darkPal = tp.preset.darkPalette;
+          final lightPal = tp.preset.lightPalette;
+          final bg = (isDark ? darkPal : lightPal).background;
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
             statusBarColor: bg,
             statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
@@ -66,8 +68,8 @@ class _MyAppState extends State<MyApp> {
             locale: _locale,
             localizationsDelegates: GlobalMaterialLocalizations.delegates,
             supportedLocales: const [Locale('ru'), Locale('en'), Locale('uk')],
-            theme: AppTheme.build(brightness: Brightness.light, accent: tp.accent.color, palette: tp.preset.palette),
-            darkTheme: AppTheme.build(brightness: Brightness.dark, accent: tp.accent.color, palette: tp.preset.palette),
+            theme: AppTheme.build(brightness: Brightness.light, accent: tp.accent.color, palette: lightPal),
+            darkTheme: AppTheme.build(brightness: Brightness.dark, accent: tp.accent.color, palette: darkPal),
             themeMode: tp.mode,
             initialRoute: NavigationService.homeRoute,
             routes: {
