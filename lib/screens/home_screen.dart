@@ -32,16 +32,35 @@ class _HomeScreenState extends State<HomeScreen> {
     final provider = context.watch<TradeProvider>();
     final strings = AppStrings(locale);
     final isWide = MediaQuery.sizeOf(context).width >= 900;
+    final accent = Theme.of(context).colorScheme.primary;
+    final bg = Theme.of(context).scaffoldBackgroundColor;
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding:
-              EdgeInsets.fromLTRB(isWide ? 28 : 16, 18, isWide ? 28 : 16, 28),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1180),
-              child: _buildNexoraOverview(context, provider, isWide, strings),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: RadialGradient(
+            center: const Alignment(0.9, -0.6),
+            radius: 1.4,
+            colors: [accent.withValues(alpha: 0.10), Colors.transparent],
+          ),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+              center: const Alignment(-0.8, 0.3),
+              radius: 1.2,
+              colors: [accent.withValues(alpha: 0.06), Colors.transparent],
+            ),
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.fromLTRB(isWide ? 28 : 16, 18, isWide ? 28 : 16, 28),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1180),
+                  child: _buildNexoraOverview(context, provider, isWide, strings),
+                ),
+              ),
             ),
           ),
         ),
@@ -158,31 +177,33 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Widget _statCard(BuildContext context, _StatData stat) => _panel(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(stat.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodySmall),
+  Widget _statCard(BuildContext context, _StatData stat) {
+    final accent = Theme.of(context).colorScheme.primary;
+    final isPnl = stat.title.toLowerCase().contains('pnl') || stat.title.contains('PnL');
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 420),
+      tween: Tween(begin: 0, end: 1),
+      curve: Curves.easeOutCubic,
+      builder: (context, val, child) => Opacity(opacity: val, child: Transform.translate(offset: Offset(0, 8 * (1 - val)), child: child)),
+      child: _panel(
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            gradient: isPnl ? LinearGradient(colors: [accent.withValues(alpha: 0.08), Colors.transparent], begin: Alignment.topRight, end: Alignment.bottomLeft) : null,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(stat.title, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: 2),
                 Text(stat.value,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        color: stat.color,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 22)),
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: stat.color, fontWeight: FontWeight.w800, fontSize: 22, letterSpacing: -0.5)),
                 const SizedBox(height: 1),
-                Text(stat.caption,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodySmall),
+                Text(stat.caption, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.bodySmall),
               ]),
         ),
-      );
+      ),
+    );
+  }
 
   Widget _buildGettingStarted(BuildContext context, AppStrings strings) =>
       _panel(
@@ -216,24 +237,28 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 
   Widget _step(BuildContext context, String number, String title,
-          String description, String action, VoidCallback onTap) =>
-      Container(
-        padding: const EdgeInsets.all(10),
+          String description, String action, VoidCallback onTap) {
+    final accent = Theme.of(context).colorScheme.primary;
+    return Container(
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-            color: TradeColors.surface,
-            borderRadius: BorderRadius.circular(9),
-            border: Border.all(color: TradeColors.border)),
+            gradient: LinearGradient(
+              colors: [accent.withValues(alpha: 0.06), Colors.transparent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: accent.withValues(alpha: 0.18))),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
             Container(
-                width: 22,
-                height: 22,
+                width: 24,
+                height: 24,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: TradeColors.tertiaryText)),
-                child:
-                    Text(number, style: Theme.of(context).textTheme.bodySmall)),
+                    gradient: LinearGradient(colors: [accent.withValues(alpha: 0.25), accent.withValues(alpha: 0.08)])),
+                child: Text(number, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: accent, fontWeight: FontWeight.w700))),
             const SizedBox(width: 10),
             Expanded(
                 child: Text(title,
@@ -243,15 +268,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         ?.copyWith(fontSize: 13))),
             const SizedBox(width: 8),
             OutlinedButton(
-                onPressed: onTap, child: Text(action)),
+                onPressed: onTap,
+                style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: accent.withValues(alpha: 0.4)),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+                child: Text(action, style: TextStyle(fontSize: 12, color: accent))),
           ]),
-          const SizedBox(height: 3),
+          const SizedBox(height: 6),
           Padding(
-              padding: const EdgeInsets.only(left: 32),
+              padding: const EdgeInsets.only(left: 34),
               child: Text(description,
                   style: Theme.of(context).textTheme.bodySmall)),
         ]),
       );
+  }
 
   Widget _buildExchangeBalance(BuildContext context) => _panel(
         child: Padding(
@@ -357,9 +389,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _panel({required Widget child}) => Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).cardTheme.color,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.15))),
+            color: Theme.of(context).cardTheme.color?.withValues(alpha: 0.85),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.10))),
         child: child,
       );
 }
