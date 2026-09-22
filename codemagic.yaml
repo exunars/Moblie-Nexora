@@ -1,30 +1,37 @@
+# Codemagic CI — builds unsigned IPA for Sideloadly (free Apple ID, no $99 needed)
+# Push to main → Codemagic auto-builds → download .ipa from Codemagic artifacts → install via Sideloadly on iPhone
 workflows:
-  ios-release:
-    name: iOS Release
+  ios-unsigned:
+    name: iOS Unsigned (Sideloadly)
     max_build_duration: 60
     instance_type: mac_mini_m2
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
-      groups:
-        - app_store_credentials
-      vars:
-        BUNDLE_ID: "com.nexora.app"
-        APP_STORE_APP_ID: "0000000000"
-    ios_signing:
-      distribution_type: app_store
-      bundle_identifier: com.nexora.app
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
       - name: Flutter analyze
         script: flutter analyze
-      - name: Flutter build IPA
+      - name: Build unsigned iOS app
         script: |
-          flutter build ipa --release \
-            --build-name=1.0.7 \
-            --build-number=8 \
-            --export-options-plist=/Users/builder/export_options.plist
+          flutter build ios --release --no-codesign
+      - name: Create unsigned IPA for Sideloadly
+        script: |
+          APP_PATH=$(find build/ios -name "Runner.app" | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "Runner.app not found!"
+            exit 1
+          fi
+          echo "Found app at: $APP_PATH"
+          mkdir -p build/ios/ipa/Payload
+          cp -r "$APP_PATH" build/ios/ipa/Payload/
+          cd build/ios/ipa
+          zip -r Nexora-unsigned.ipa Payload
+          rm -rf Payload
+          ls -lh Nexora-unsigned.ipa
+          echo "IPA ready for Sideloadly"
     artifacts:
       - build/ios/ipa/*.ipa
+      - build/ios/iphoneos/*.app
