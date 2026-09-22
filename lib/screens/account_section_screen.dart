@@ -140,11 +140,11 @@ class AccountSectionScreen extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-              color: TradeColors.surface,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: TradeColors.border)),
+              border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.15))),
           child: Row(children: [
-            Icon(icon, color: TradeColors.primaryPurple),
+            Icon(icon, color: Theme.of(context).colorScheme.primary),
             const SizedBox(width: 10),
             Expanded(
                 child: Column(
@@ -154,7 +154,7 @@ class AccountSectionScreen extends StatelessWidget {
                       style: const TextStyle(fontWeight: FontWeight.w700)),
                   const SizedBox(height: 4),
                   Text(value,
-                      style: const TextStyle(color: TradeColors.primaryPurple)),
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary)),
                 ])),
             const Icon(Icons.open_in_new, size: 18),
           ]),
@@ -190,7 +190,7 @@ class AccountSectionScreen extends StatelessWidget {
           String subtitle, List<Widget> children) =>
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(children: [
-          Icon(icon, color: TradeColors.primaryPurple),
+          Icon(icon, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 10),
           Text(title, style: Theme.of(context).textTheme.headlineMedium)
         ]),
@@ -200,7 +200,7 @@ class AccountSectionScreen extends StatelessWidget {
         ...children,
       ]);
 
-  Widget _emptyPanel(String title, String subtitle) => _panel(
+  Widget _emptyPanel(String title, String subtitle) => Builder(builder: (context) => _panel(
       child: Padding(
           padding: const EdgeInsets.all(20),
           child:
@@ -208,8 +208,8 @@ class AccountSectionScreen extends StatelessWidget {
             Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
             const SizedBox(height: 7),
             Text(subtitle,
-                style: const TextStyle(color: TradeColors.secondaryText))
-          ])));
+                style: Theme.of(context).textTheme.bodyMedium)
+          ]))));
 
   Widget _statusPanel(BuildContext context, String title, String subtitle) =>
       _panel(
@@ -221,8 +221,8 @@ class AccountSectionScreen extends StatelessWidget {
                     width: 10,
                     height: 10,
                     margin: const EdgeInsets.only(top: 5),
-                    decoration: const BoxDecoration(
-                        color: TradeColors.tertiaryText,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).textTheme.bodySmall?.color,
                         shape: BoxShape.circle)),
                 const SizedBox(width: 12),
                 Expanded(
@@ -237,12 +237,12 @@ class AccountSectionScreen extends StatelessWidget {
                     ]))
               ])));
 
-  Widget _panel({required Widget child}) => Container(
+  Widget _panel({required Widget child}) => Builder(builder: (context) => Container(
       decoration: BoxDecoration(
-          color: TradeColors.cardBackground,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: TradeColors.border)),
-      child: child);
+          color: Theme.of(context).cardTheme.color,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.15))),
+      child: child));
 }
 
 class _SettingsRedirectPlaceholder extends StatelessWidget {

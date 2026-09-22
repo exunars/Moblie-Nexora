@@ -46,3 +46,7 @@ app.*.map.json
 **/android/app/.gradle/
 **/android/local.properties
 **/android/app/build/
+
+# Agent audit (local only)
+AGENT_AUDIT.md
+README.md.bak

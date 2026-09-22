@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TradeColors {
   static const primaryPurple = Color(0xFF9A8CFF);
@@ -14,7 +15,7 @@ class TradeColors {
   static const errorLight = Color(0xFFFF7675);
   static const warningOrange = Color(0xFFE17055);
   static const infoBlue = Color(0xFF74B9FF);
-  // dark palette
+  // default dark
   static const background = Color(0xFF0B0D14);
   static const surface = Color(0xFF10121B);
   static const cardBackground = Color(0xFF141722);
@@ -22,7 +23,7 @@ class TradeColors {
   static const primaryText = Color(0xFFFFFFFF);
   static const secondaryText = Color(0xFFB2BEC3);
   static const tertiaryText = Color(0xFF636E72);
-  // light palette
+  // default light (now overridden by preset when used)
   static const lightBackground = Color(0xFFF5F6FA);
   static const lightSurface = Color(0xFFFFFFFF);
   static const lightCard = Color(0xFFFFFFFF);
@@ -38,17 +39,39 @@ class TradeColors {
   );
 }
 
-/// Builds ThemeData dynamically based on brightness + accent.
+/// Palette that a theme builds from — changes with preset
+class AppPalette {
+  const AppPalette({
+    required this.background,
+    required this.surface,
+    required this.card,
+    required this.border,
+    required this.primaryText,
+    required this.secondaryText,
+    required this.tertiaryText,
+  });
+  final Color background, surface, card, border, primaryText, secondaryText, tertiaryText;
+}
+
+/// Builds ThemeData dynamically — now with per-preset palette override.
 class AppTheme {
-  static ThemeData build({required Brightness brightness, required Color accent}) {
+  /// Call with preset if available; falls back to default light/dark.
+  static ThemeData build({
+    required Brightness brightness,
+    required Color accent,
+    AppPalette? palette,
+  }) {
     final isDark = brightness == Brightness.dark;
-    final bg = isDark ? TradeColors.background : TradeColors.lightBackground;
-    final sf = isDark ? TradeColors.surface : TradeColors.lightSurface;
-    final card = isDark ? TradeColors.cardBackground : TradeColors.lightCard;
-    final bdr = isDark ? TradeColors.border : TradeColors.lightBorder;
-    final pt = isDark ? TradeColors.primaryText : TradeColors.lightPrimaryText;
-    final st = isDark ? TradeColors.secondaryText : TradeColors.lightSecondaryText;
-    final tt = isDark ? TradeColors.tertiaryText : TradeColors.lightTertiaryText;
+    // resolve palette
+    final bg = palette?.background ?? (isDark ? TradeColors.background : TradeColors.lightBackground);
+    final sf = palette?.surface ?? (isDark ? TradeColors.surface : TradeColors.lightSurface);
+    final card = palette?.card ?? (isDark ? TradeColors.cardBackground : TradeColors.lightCard);
+    final bdr = palette?.border ?? (isDark ? TradeColors.border : TradeColors.lightBorder);
+    final pt = palette?.primaryText ?? (isDark ? TradeColors.primaryText : TradeColors.lightPrimaryText);
+    final st = palette?.secondaryText ?? (isDark ? TradeColors.secondaryText : TradeColors.lightSecondaryText);
+    final tt = palette?.tertiaryText ?? (isDark ? TradeColors.tertiaryText : TradeColors.lightTertiaryText);
+
+    final baseText = GoogleFonts.plusJakartaSansTextTheme(ThemeData(brightness: brightness).textTheme);
 
     return ThemeData(
       useMaterial3: true,
@@ -75,19 +98,16 @@ class AppTheme {
         shadowColor: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: accent,
-        foregroundColor: Colors.white,
-      ),
-      textTheme: TextTheme(
-        displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: pt),
-        displayMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: pt),
-        headlineMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: pt),
-        headlineSmall: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: pt),
-        titleLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: pt),
-        bodyLarge: TextStyle(fontSize: 16, color: pt),
-        bodyMedium: TextStyle(fontSize: 14, color: st),
-        bodySmall: TextStyle(fontSize: 12, color: tt),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: accent, foregroundColor: Colors.white),
+      textTheme: baseText.copyWith(
+        displayLarge: baseText.displayLarge?.copyWith(fontSize: 32, fontWeight: FontWeight.w700, color: pt),
+        displayMedium: baseText.displayMedium?.copyWith(fontSize: 28, fontWeight: FontWeight.w700, color: pt),
+        headlineMedium: baseText.headlineMedium?.copyWith(fontSize: 20, fontWeight: FontWeight.w600, color: pt),
+        headlineSmall: baseText.headlineSmall?.copyWith(fontSize: 18, fontWeight: FontWeight.w500, color: pt),
+        titleLarge: baseText.titleLarge?.copyWith(fontSize: 16, fontWeight: FontWeight.w600, color: pt, letterSpacing: -0.2),
+        bodyLarge: baseText.bodyLarge?.copyWith(fontSize: 16, color: pt),
+        bodyMedium: baseText.bodyMedium?.copyWith(fontSize: 14, color: st),
+        bodySmall: baseText.bodySmall?.copyWith(fontSize: 12, color: tt),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
@@ -95,20 +115,13 @@ class AppTheme {
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
         enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: bdr)),
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: sf,
-        selectedItemColor: accent,
-        unselectedItemColor: st,
-        type: BottomNavigationBarType.fixed,
-      ),
-      chipTheme: ChipThemeData(
-        selectedColor: accent.withValues(alpha: 0.15),
-        backgroundColor: Colors.transparent,
-      ),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(backgroundColor: sf, selectedItemColor: accent, unselectedItemColor: st, type: BottomNavigationBarType.fixed),
+      chipTheme: ChipThemeData(selectedColor: accent.withValues(alpha: 0.15), backgroundColor: Colors.transparent),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? accent : null),
         trackColor: WidgetStateProperty.resolveWith((s) => s.contains(WidgetState.selected) ? accent.withValues(alpha: 0.4) : null),
       ),
+      dividerColor: bdr,
     );
   }
 }

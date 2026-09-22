@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
               (tp.mode == ThemeMode.system &&
                   MediaQuery.platformBrightnessOf(context) == Brightness.dark);
           // update system chrome on theme change
-          final bg = isDark ? TradeColors.background : TradeColors.lightBackground;
+          final bg = tp.preset.palette.background;
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
             statusBarColor: bg,
             statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
@@ -61,13 +61,13 @@ class _MyAppState extends State<MyApp> {
             systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
           ));
           return MaterialApp(
-            title: 'Trade Bot',
+            title: 'Nexora',
             debugShowCheckedModeBanner: false,
             locale: _locale,
             localizationsDelegates: GlobalMaterialLocalizations.delegates,
             supportedLocales: const [Locale('ru'), Locale('en'), Locale('uk')],
-            theme: AppTheme.build(brightness: Brightness.light, accent: tp.accent.color),
-            darkTheme: AppTheme.build(brightness: Brightness.dark, accent: tp.accent.color),
+            theme: AppTheme.build(brightness: Brightness.light, accent: tp.accent.color, palette: tp.preset.palette),
+            darkTheme: AppTheme.build(brightness: Brightness.dark, accent: tp.accent.color, palette: tp.preset.palette),
             themeMode: tp.mode,
             initialRoute: NavigationService.homeRoute,
             routes: {

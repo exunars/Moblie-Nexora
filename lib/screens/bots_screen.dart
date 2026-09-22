@@ -243,7 +243,7 @@ class _BotsScreenState extends State<BotsScreen> {
         label: Text(_strings.get('create_bot')),
         style: OutlinedButton.styleFrom(
             minimumSize: const Size.fromHeight(56),
-            side: const BorderSide(color: TradeColors.border)),
+            side: BorderSide(color: Theme.of(context).dividerColor.withValues(alpha: 0.15))),
       );
 
   Widget _botCard(BuildContext context, String botName) => _panel(
@@ -326,17 +326,16 @@ class _BotsScreenState extends State<BotsScreen> {
         ),
       );
 
-  Widget _hint(String text) => Padding(
+  Widget _hint(String text) => Builder(builder: (context) => Padding(
       padding: const EdgeInsets.only(bottom: 2),
       child: Text(text,
-          style:
-              const TextStyle(color: TradeColors.tertiaryText, fontSize: 11)));
+          style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontSize: 11))));
 
-  Widget _panel({required Widget child}) => Container(
+  Widget _panel({required Widget child}) => Builder(builder: (context) => Container(
         decoration: BoxDecoration(
-            color: TradeColors.cardBackground,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: TradeColors.border)),
+            color: Theme.of(context).cardTheme.color,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.15))),
         child: child,
-      );
+      ));
 }

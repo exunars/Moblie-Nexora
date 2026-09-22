@@ -1,246 +1,155 @@
-# Trade Bot
+# Nexora
 
-Кроссплатформенное приложение для торговли криптовалютами с поддержкой Android и iOS.
+Cross-platform trading application built with Flutter. Supports Android and iOS.
 
-## 📋 Описание
+## About
 
-Trade Bot - это современное Flutter-приложение для отслеживания криптовалютного рынка, управления портфелем и выполнения торговых операций. Приложение предоставляет чистый и интуитивный интерфейс для отслеживания цен, анализа графиков и управления активами.
+Nexora is a mobile client for cryptocurrency portfolio tracking, bot management, and trade execution. The app provides a clean interface for monitoring prices, analyzing charts, and managing assets across multiple exchanges.
 
-## ✨ Особенности
+Current status: UI and architecture are production-ready. Market data, portfolio, and order execution run on mock data until the backend API is connected.
 
-- 📊 **Визуализация данных**: красивые графики и карточки для отображения цен и портфеля
-- 📱 **Кроссплатформенность**: работает на Android и iOS
-- 🌙 **Темная тема**: элегантный темный интерфейс с фиолетовой цветовой схемой
-- 🔔 **Реальное обновление**: автоматические обновления цен в реальном времени
-- 📈 **Аналитика**: подробная статистика портфеля и истории сделок
-- 🎨 **Современный UI**: плавные анимации и градиенты
+## Features
 
-## 🏗️ Архитектура
+- Market overview with price charts and asset strip
+- Portfolio overview with realized PnL and position tracking
+- Grid bot creation and management (paper trading mode)
+- Trade history: orders, executions, positions
+- Backtesting configuration
+- Exchange API connection management
+- Push notifications (Android 13+ runtime permission)
+- 8 color themes: Midnight, Ocean, Forest, Sunset, Berry, Arctic, Light, Sand
+- Accent color customization and light/dark toggle
+- Localization: Russian, English, Ukrainian
 
-Приложение использует MVVM (Model-View-ViewModel) архитектуру:
+## Tech Stack
+
+- Flutter 3 / Dart 3
+- State management: Provider
+- Charts: fl_chart
+- Fonts: google_fonts (Plus Jakarta Sans)
+- Storage: shared_preferences
+- Notifications: flutter_local_notifications
+- Navigation: named routes via NavigationService
+
+## Project Structure
 
 ```
 lib/
-├── models/           # Модели данных (Order, Portfolio, Trade, MarketData)
-├── providers/        # State management (TradeProvider)
-├── screens/          # Экраны приложения
-├── widgets/          # Переиспользуемые виджеты
-├── services/         # Сервисы (NavigationService)
-└── theme/            # Тема и стили (TradeColors, TradeThemes)
+  main.dart                — entry point, theme init, routing
+  models/                  — Order, Portfolio, TradeData
+  providers/
+    trade_provider.dart    — market, portfolio and order state
+    theme_provider.dart    — theme mode, accent, presets
+  screens/
+    main_screen.dart       — shell with drawer navigation (IndexedStack)
+    home_screen.dart       — dashboard, KPIs, market strip
+    bots_screen.dart       — bot creation form
+    chart_screen.dart      — trading chart
+    history_overview_screen.dart
+    backtests_screen.dart
+    account_section_screen.dart
+    settings_screen.dart   — profile, trading, app, appearance
+  services/
+    api/                   — API DTOs and service layer
+    app_strings.dart       — localized strings
+    navigation_service.dart
+    notification_service.dart
+  theme/
+    trade_theme.dart       — palette, AppTheme builder, typography
 ```
 
-### Навигация и дизайн
+Drawer order: Overview, Bots, History, Backtests, Exchanges, Subscription, Settings, Help.
 
-- Основная оболочка находится в `lib/screens/main_screen.dart`.
-- На смартфоне используется выезжающее боковое меню `Drawer`: Обзор, Рынок, История и Настройки.
-- Нижняя навигация больше не используется; это освобождает вертикальное место под графики и торговые карточки.
-- Визуальная система обновлена в сторону Nexora-подобного trading desk: графитовый фон, лаймовый акцент, компактные панели и плотная иерархия данных.
-- Все разделы остаются частью одного `IndexedStack`, поэтому состояние вкладок не теряется при переходах.
+## Getting Started
 
-## 🚀 Установка
+### Requirements
 
-### Предварительные требования
+- Flutter SDK >= 3.0.0
+- Dart SDK >= 3.0.0
+- Android SDK 21+ (Android Studio), Xcode 14+ for iOS
 
-- Flutter SDK 3.0.0 или выше
-- Dart SDK 3.0.0 или выше
-- Android Studio / VS Code с Flutter расширением
-- Для Android:
-  - Android SDK 21 (Android 5.0)
-  - Android SDK 34 (Android 14)
-  - JDK 8 или выше
-- Для iOS (macOS):
-  - Xcode 14.0 или выше
-  - CocoaPods
-
-### Установка зависимостей
+### Install dependencies
 
 ```bash
 flutter pub get
 ```
 
-### Настройка Android
+### Run
 
-1. Войдите в Android Studio и откройте проект
-2. Синхронизируйте Gradle файлы
-3. Создайте подпись APK/AAB в `android/app/build.gradle`
-
-### Настройка iOS
-
-1. Установите CocoaPods зависимости:
 ```bash
-cd ios && pod install && cd ..
+flutter run
 ```
 
-2. Откройте проект в Xcode и настройте signing
+### Tests and analysis
 
-## 📱 Элементы интерфейса
-
-### Главная страница (HomeScreen)
-
-- Приветствие и статус подключения
-- Карточка портфеля с общей стоимостью и статистикой
-- Горизонтальный список монет с ценами и изменениями
-- Быстрые действия (Купить, Продать, Сделка, История)
-
-### Экран графиков (ChartScreen)
-
-- Детальный график выбранной монеты
-- Контролы для торговли
-- Исторические данные
-
-### История (HistoryScreen)
-
-- Список выполненных сделок
-- Фильтрация и поиск
-- Статистика по сделкам
-
-### Настройки (SettingsScreen)
-
-- Настройки приложения
-- Информация о версии
-
-## 🎨 Цветовая схема
-
-- **Основной лаймовый акцент**: `#B8F34A` (primaryPurple/accentLime)
-- **Акцентный голубой**: `#00CEC9` (accentCyan)
-- **Акцентный розовый**: `#FD79A8` (accentPink)
-- **Успех**: `#00B894` (successGreen)
-- **Ошибка**: `#D63031` (errorRed)
-- **Фон**: `#10120F` (background)
-- **Поверхность**: `#181C16` (surface)
-
-## 📦 Зависимости
-
-- `flutter`: основной фреймворк
-- `fl_chart`: библиотека для графиков
-- `provider`: state management
-- `intl`: форматирование дат и чисел
-- `cupertino_icons`: иконки
-
-## 🧪 Тестирование
-
-Запуск тестов:
 ```bash
 flutter test
+flutter analyze
 ```
 
-## 🏗️ Сборка приложений
-
-### Android
+## Build
 
 ```bash
-# APK
+# Android APK
 flutter build apk --release
 
-# AAB (для Google Play)
+# Android App Bundle
 flutter build appbundle --release
-```
 
-### iOS
-
-```bash
-# Создание IPA для TestFlight/App Store
+# iOS (macOS only)
 flutter build ipa --release
 ```
 
-## 📝 API
+CI: codemagic.yaml is configured for unsigned IPA builds (sideloading without a paid Apple Developer account).
 
-Приложение использует mock-данные для демонстрации. Для подключения реального API:
+## Configuration
 
-1. Создайте файл `lib/services/api_service.dart`
-2. Реализуйте методы для получения данных:
-   - `fetchMarketData()`
-   - `fetchPortfolio()`
-   - `fetchOrders()`
-   - `executeTrade()`
-3. Обновите `TradeProvider` для использования сервиса
+### Android push notifications
 
-## 🔄 Разработка
+Permissions declared in `android/app/src/main/AndroidManifest.xml`:
 
-### Режим разработки
+- `POST_NOTIFICATIONS` (Android 13+, requested at runtime)
+- `RECEIVE_BOOT_COMPLETED`, `VIBRATE`
 
-```bash
-# Android
-flutter run
+The notification channel `nexora_test_channel` is created in NotificationService. The test push button in Settings under Debug requests permission before showing the notification.
 
-# iOS
-flutter run -d iphone
+### Theming
 
-# Chrome (для быстрого тестирования)
-flutter run -d chrome
-```
+Themes are defined in `theme/trade_theme.dart` and `providers/theme_provider.dart`:
 
-### Hot Reload
+- AppPalette holds the full set of surface/card/border/text colors per preset.
+- AppTheme.build() generates ThemeData from brightness + accent + palette.
+- All screens consume Theme.of(context) (cardTheme, colorScheme, dividerColor, textTheme) so switching a preset updates the entire app, not just isolated blocks.
+- Typography uses Plus Jakarta Sans for a softer, more readable look.
 
-Приложение поддерживает hot reload для быстрой итерации:
-- `r` - hot reload
-- `R` - hot restart
-- `h` - список доступных команд
+Persistence: selected preset, accent, brightness mode, and animation preference are stored in SharedPreferences and restored on launch.
 
-## 🐛 Текущие ограничения
+### Assets
 
-- Текущая версия использует mock-данные вместо реального API
-- Отсутствуют полнофункциональные формы для ввода торговых операций
-- Переключатель темы в настройках пока не подключён к `ThemeMode`
-- Полный `flutter analyze/test` требует установленного Flutter SDK
+- `assets/logo.jpg` — application logo (declared in pubspec.yaml).
 
-## 🚧 Ближайшие планы
+## Current Limitations
 
-- [ ] Подключение реального API бирж (Binance, Bybit)
-- [ ] Добавление dark/light mode переключения
-- [ ] Реализация форм покупки/продажи
-- [ ] Добавление аналитических графиков
-- [ ] Реализация фильтрации и поиска
-- [x] Базовые unit/widget-тесты провайдера и главного экрана
-- [ ] Оптимизация производительности
-- [ ] Добавление горизонтального скролла для истории сделок
+- Market data, portfolio, and order execution are in-memory mock values.
+- connect() toggles local state only; no real exchange API, WebSocket, or auth.
+- Chart uses static points.
+- ios/ folder is not generated in this checkout; iOS signing requires macOS.
+- Android release currently uses debug signing for development builds.
 
-## 📄 Лицензия
+## Roadmap
 
-Этот проект создан для образовательных целей.
+- Extract mock data into a repository interface and connect a real backend API
+- Add WebSocket market stream with proper lifecycle management
+- Use secure storage for tokens and API keys (Keychain / Android Keystore)
+- Add DTO validation, error handling, and loading states
+- Generate iOS platform and configure Bundle ID and signing
+- Configure production Android signing
+- Add integration tests for connect/place/cancel order flows
 
-## 🔎 Аудит состояния проекта (2026-09)
+## License
 
-### Что сейчас работает
+Created for educational purposes.
 
-- `lib/main.dart` запускает приложение, регистрирует единый `TradeProvider` и маршрут графика.
-- `lib/providers/trade_provider.dart` является текущим владельцем состояния рынка, портфеля и ордеров.
-- `lib/screens/home_screen.dart` и `lib/screens/history_screen.dart` читают состояние провайдера, а не рисуют фиктивную историю.
-- Таймер обновления рынка отменяется в `dispose`; при обновлении синхронизируются `Asset` и соответствующий `MarketData`.
-- Завершённый ордер заменяет pending-версию в общем списке ордеров.
+## Authors
 
-### Что пока является демонстрацией
-
-- Данные рынка, портфель и исполнение ордера находятся в памяти и инициализируются mock-значениями.
-- `connect()` пока только меняет локальный статус. Реального API, WebSocket и авторизации нет.
-- График использует статические точки; история не сохраняется после перезапуска.
-- В рабочем дереве нет каталога `ios/`, поэтому iOS-проект ещё не сгенерирован и не подписан.
-- Android release пока использует debug signing. Перед публикацией нужно подключить release keystore через секреты CI/локальное защищённое хранилище.
-
-### Куда подключать следующие слои
-
-1. **API/биржа:** создать `lib/services/api_service.dart` с интерфейсом `fetchMarketData`, `fetchPortfolio`, `fetchOrders`, `executeTrade`; `TradeProvider` должен зависеть от интерфейса, а не от HTTP-клиента напрямую.
-2. **Поток котировок:** добавить `lib/services/market_stream_service.dart` для WebSocket, отменять подписку в `TradeProvider.dispose` и переводить ошибки в `_errorMessage`.
-3. **Сервер бота:** `connect()` должен выполнять health-check и авторизацию; API-ключи нельзя хранить в `SharedPreferences`, исходниках или логах.
-4. **Локальное хранилище:** добавить репозиторий в `lib/services/` для настроек, последнего состояния и кэша. Для секретов использовать Keychain на iOS и Android Keystore через безопасный Flutter-плагин.
-5. **База данных:** приложение не должно подключаться к PostgreSQL/другой БД напрямую. Мобильный клиент обращается к backend API, а backend владеет БД и миграциями.
-6. **Навигация:** именованные маршруты находятся в `lib/services/navigation_service.dart`; при росте приложения экранные переходы нужно централизовать там.
-
-### Приоритет перед релизом
-
-- [ ] Сгенерировать iOS-платформу на macOS и настроить Bundle ID, capabilities и Apple signing.
-- [ ] Настроить настоящий release signing Android и убрать `signingConfig signingConfigs.debug`.
-- [ ] Вынести mock-данные в отдельный `MockTradeRepository`.
-- [ ] Добавить DTO/JSON-сериализацию и обработку сетевых ошибок.
-- [ ] Добавить валидацию лимитов, баланса, точности количества и повторной отправки ордера.
-- [ ] Добавить интеграционные тесты подключения, размещения/отмены ордера и восстановления состояния.
-- [ ] Запустить `flutter analyze`, `flutter test`, `flutter build appbundle --release` на машине с установленными Flutter и Android SDK.
-
-## 👥 Авторы
-
-Trade Bot Team
-
-## 🙏 Благодарности
-
-- Flutter team
-- Community contributors
+Nexora team

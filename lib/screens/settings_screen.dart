@@ -114,20 +114,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
   AppStrings get _strings => AppStrings(widget.locale);
 
   Widget _profileCard(BuildContext context) {
+    final accent = Theme.of(context).colorScheme.primary;
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: TradeColors.cardBackground,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: TradeColors.primaryPurple.withValues(alpha: 0.22)),
+        border: Border.all(color: accent.withValues(alpha: 0.22)),
       ),
       child: Row(children: [
         CircleAvatar(
           radius: 27,
-          backgroundColor: TradeColors.primaryPurple,
+          backgroundColor: accent,
           child: Text('TB',
               style: TextStyle(
-                  color: TradeColors.background, fontWeight: FontWeight.bold)),
+                  color: Theme.of(context).scaffoldBackgroundColor, fontWeight: FontWeight.bold)),
         ),
         const SizedBox(width: 14),
         Expanded(
@@ -138,7 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Text(_strings.get('demo_account'),
               style: Theme.of(context).textTheme.bodyMedium),
         ])),
-        Icon(Icons.chevron_right_rounded, color: TradeColors.secondaryText),
+        Icon(Icons.chevron_right_rounded, color: Theme.of(context).textTheme.bodyMedium?.color),
       ]),
     );
   }
@@ -147,7 +148,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.only(left: 4, bottom: 8),
         child: Text(label,
             style: TextStyle(
-                color: TradeColors.tertiaryText,
+                color: Theme.of(context).textTheme.bodySmall?.color,
                 fontSize: 11,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.2)),
@@ -155,13 +156,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _panel({required List<Widget> children}) => Container(
         decoration: BoxDecoration(
-            color: TradeColors.cardBackground,
+            color: Theme.of(context).cardTheme.color,
             borderRadius: BorderRadius.circular(18)),
         child: Column(children: children),
       );
 
   Widget _divider() =>
-      Divider(height: 1, indent: 62, endIndent: 16, color: TradeColors.surface);
+      Divider(height: 1, indent: 62, endIndent: 16, color: Theme.of(context).dividerColor.withValues(alpha: 0.12));
 
   Widget _item(IconData icon, String title, String subtitle,
           {VoidCallback? onTap}) =>
@@ -170,11 +171,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
-          leading: Icon(icon, color: TradeColors.primaryPurple),
+          leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
           title: Text(title),
           subtitle: Text(subtitle),
           trailing: Icon(Icons.chevron_right_rounded,
-              color: TradeColors.tertiaryText),
+              color: Theme.of(context).textTheme.bodySmall?.color),
           onTap: onTap ?? () {},
         ),
       );
@@ -186,7 +187,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: SwitchListTile(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
-          secondary: Icon(icon, color: TradeColors.primaryPurple),
+          secondary: Icon(icon, color: Theme.of(context).colorScheme.primary),
           title: Text(title),
           subtitle: Text(subtitle),
           value: value,
@@ -198,7 +199,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _botPanel(BuildContext context) => Container(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
         decoration: BoxDecoration(
-            color: TradeColors.cardBackground,
+            color: Theme.of(context).cardTheme.color,
             borderRadius: BorderRadius.circular(18)),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Material(

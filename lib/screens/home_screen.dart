@@ -100,18 +100,18 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: BoxDecoration(
                 color: provider.isConnected
                     ? TradeColors.successGreen.withValues(alpha: 0.12)
-                    : TradeColors.cardBackground,
+                    : Theme.of(context).cardTheme.color,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                     color: provider.isConnected
                         ? TradeColors.successGreen.withValues(alpha: 0.35)
-                        : TradeColors.border)),
+                        : Theme.of(context).dividerColor.withValues(alpha: 0.15))),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               Icon(Icons.circle,
                   size: 8,
                   color: provider.isConnected
                       ? TradeColors.successGreen
-                      : TradeColors.tertiaryText),
+                      : Theme.of(context).textTheme.bodySmall?.color),
               const SizedBox(width: 7),
               Text(
                   provider.isConnected
@@ -133,14 +133,14 @@ class _HomeScreenState extends State<HomeScreen> {
           strings.get('closed_trades'),
           TradeColors.successGreen),
       _StatData(strings.get('commissions'), '\$0.00',
-          strings.get('gross_profit_compare'), TradeColors.primaryText),
+          strings.get('gross_profit_compare'), Theme.of(context).textTheme.titleLarge!.color!),
       _StatData(
           strings.get('open_positions'),
           '${portfolio?.holdings.length ?? 0}',
           strings.get('nothing_held'),
-          TradeColors.primaryText),
+          Theme.of(context).textTheme.titleLarge!.color!),
       _StatData(strings.get('bots_running'), '0 / 0',
-          strings.get('executions_count'), TradeColors.primaryText),
+          strings.get('executions_count'), Theme.of(context).textTheme.titleLarge!.color!),
     ];
     return LayoutBuilder(builder: (context, constraints) {
       final columns = constraints.maxWidth >= 760 ? 4 : 2;
@@ -320,9 +320,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 128,
                       padding: const EdgeInsets.all(9),
                       decoration: BoxDecoration(
-                          color: TradeColors.surface,
+                          color: Theme.of(context).colorScheme.surface,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: TradeColors.border)),
+                          border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.15))),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -357,9 +357,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _panel({required Widget child}) => Container(
         decoration: BoxDecoration(
-            color: TradeColors.cardBackground,
+            color: Theme.of(context).cardTheme.color,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: TradeColors.border)),
+            border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.15))),
         child: child,
       );
 }

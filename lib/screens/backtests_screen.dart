@@ -261,11 +261,11 @@ class _BacktestsScreenState extends State<BacktestsScreen> {
         ),
       );
 
-  Widget _panel({required Widget child}) => Container(
+  Widget _panel({required Widget child}) => Builder(builder: (context) => Container(
         decoration: BoxDecoration(
-            color: TradeColors.cardBackground,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: TradeColors.border)),
+            color: Theme.of(context).cardTheme.color,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Theme.of(context).dividerColor.withValues(alpha: 0.15))),
         child: child,
-      );
+      ));
 }
