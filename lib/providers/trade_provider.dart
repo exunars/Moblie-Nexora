@@ -10,9 +10,9 @@ class TradeProvider extends ChangeNotifier {
   List<MarketData> _marketData = [];
 
   // Ордера
-  List<Order> _orders = [];
-  List<Order> _activeOrders = [];
-  List<Order> _completedOrders = [];
+  final List<Order> _orders = [];
+  final List<Order> _activeOrders = [];
+  final List<Order> _completedOrders = [];
 
   // Портфель
   Portfolio? _portfolio;

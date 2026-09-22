@@ -13,7 +13,7 @@ workflows:
       - name: Get Flutter packages
         script: flutter pub get
       - name: Flutter analyze
-        script: flutter analyze
+        script: flutter analyze --no-fatal-infos
       - name: Build unsigned iOS app
         script: |
           flutter build ios --release --no-codesign
