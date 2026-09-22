@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tradebot/main.dart';
+import 'package:tradebot/providers/theme_provider.dart';
+
+ThemeProvider _tp() => ThemeProvider();
 
 void main() {
   testWidgets('приложение открывает главный экран', (tester) async {
@@ -11,7 +14,7 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(themeProvider: _tp()));
 
     expect(find.text('Обзор'), findsWidgets);
     expect(find.text('С чего начать'), findsOneWidget);
@@ -29,7 +32,7 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(themeProvider: _tp()));
     await tester.tap(find.byIcon(Icons.menu_rounded));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Настройки'));
@@ -47,7 +50,7 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(themeProvider: _tp()));
     await tester.tap(find.byIcon(Icons.menu_rounded));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Боты'));
@@ -70,7 +73,7 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(themeProvider: _tp()));
     await tester.tap(find.byIcon(Icons.menu_rounded));
     await tester.pumpAndSettle();
     await tester.tap(find.text('История'));
@@ -94,7 +97,7 @@ void main() {
       tester.view.resetDevicePixelRatio();
     });
 
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(MyApp(themeProvider: _tp()));
     await tester.tap(find.byIcon(Icons.menu_rounded));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Бэктесты'));

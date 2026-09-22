@@ -785,6 +785,19 @@ class AppStrings {
         'en': 'Verification code',
         'uk': 'Код підтвердження'
       },
+      'appearance': {'ru': 'Оформление', 'en': 'Appearance', 'uk': 'Оформлення'},
+      'accent_color': {'ru': 'Цвет акцента', 'en': 'Accent color', 'uk': 'Колір акценту'},
+      'animations': {'ru': 'Анимации', 'en': 'Animations', 'uk': 'Анімації'},
+      'animations_desc': {'ru': 'Плавные переходы (легкие)', 'en': 'Smooth transitions (lightweight)', 'uk': 'Плавні переходи (легкі)'},
+      'dark_mode': {'ru': 'Тёмная тема', 'en': 'Dark mode', 'uk': 'Темна тема'},
+      'dark_mode_on': {'ru': 'Тёмная включена', 'en': 'Dark enabled', 'uk': 'Темна увімкнена'},
+      'light_mode_on': {'ru': 'Светлая включена', 'en': 'Light enabled', 'uk': 'Світла увімкнена'},
+      'switch_to_light': {'ru': 'Светлая тема', 'en': 'Light mode', 'uk': 'Світла тема'},
+      'switch_to_dark': {'ru': 'Тёмная тема', 'en': 'Dark mode', 'uk': 'Темна тема'},
+      'debug': {'ru': 'Отладка', 'en': 'Debug', 'uk': 'Налагодження'},
+      'test_push': {'ru': 'Тест push-уведомления', 'en': 'Test push notification', 'uk': 'Тест push-сповіщення'},
+      'test_push_desc': {'ru': 'Отправить тестовое уведомление (потом удалим)', 'en': 'Send test notification (temporary)', 'uk': 'Надіслати тестове сповіщення (тимчасово)'},
+      'test_push_sent': {'ru': 'Тестовое уведомление отправлено', 'en': 'Test notification sent', 'uk': 'Тестове сповіщення надіслано'},
     };
     return values[key]?[locale.languageCode] ?? values[key]?['ru'] ?? key;
   }

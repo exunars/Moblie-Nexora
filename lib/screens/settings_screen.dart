@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 import '../services/app_strings.dart';
+import '../services/notification_service.dart';
 import '../theme/trade_theme.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -87,6 +90,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: _showLanguageDialog),
           _divider(),
           _item(Icons.info_outline_rounded, strings.get('about'), 'Nexora 0.9'),
+        ]),
+        const SizedBox(height: 20),
+        _sectionLabel(strings.get('appearance')),
+        _appearancePanel(context, strings),
+        const SizedBox(height: 20),
+        _sectionLabel(strings.get('debug')),
+        _panel(children: [
+          _item(Icons.notifications_active_outlined, strings.get('test_push'),
+              strings.get('test_push_desc'),
+              onTap: _sendTestPush),
         ]),
       ],
     );
@@ -500,15 +513,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             SimpleDialogOption(
               onPressed: () => Navigator.pop(dialogContext, option),
               child: Row(children: [
-                Icon(
-                  _languageName == option
-                      ? Icons.radio_button_checked
-                      : Icons.radio_button_unchecked,
-                  color: _languageName == option
-                      ? TradeColors.primaryPurple
-                      : TradeColors.secondaryText,
-                  size: 20,
-                ),
+                Icon(_languageName == option ? Icons.radio_button_checked : Icons.radio_button_unchecked, color: _languageName == option ? Theme.of(context).colorScheme.primary : Theme.of(context).textTheme.bodySmall?.color, size: 20),
                 const SizedBox(width: 12),
                 Text(option),
               ]),
@@ -524,8 +529,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
       };
       widget.onLocaleChanged(locale);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('${_strings.get('language_changed')}: $language')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${_strings.get('language_changed')}: $language')));
     }
+  }
+
+  Widget _appearancePanel(BuildContext context, AppStrings strings) {
+    final tp = context.watch<ThemeProvider>();
+    return Container(
+      decoration: BoxDecoration(color: Theme.of(context).cardTheme.color, borderRadius: BorderRadius.circular(18)),
+      child: Column(children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+          child: Row(children: [
+            Icon(Icons.palette_outlined, color: tp.accent.color),
+            const SizedBox(width: 10),
+            Expanded(child: Text(strings.get('accent_color'), style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 14))),
+            IconButton(
+              tooltip: tp.isDark ? strings.get('switch_to_light') : strings.get('switch_to_dark'),
+              icon: AnimatedSwitcher(duration: const Duration(milliseconds: 350), transitionBuilder: (ch, a) => RotationTransition(turns: Tween<double>(begin: 0.7, end: 1).animate(CurvedAnimation(parent: a, curve: Curves.easeOutBack)), child: ScaleTransition(scale: a, child: ch)), child: Icon(tp.isDark ? Icons.dark_mode_rounded : Icons.wb_sunny_rounded, key: ValueKey(tp.isDark), color: tp.accent.color)),
+              onPressed: () => tp.toggleDarkLight(),
+            ),
+          ]),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          child: Wrap(spacing: 10, runSpacing: 10, children: [
+            for (final a in AppAccent.values)
+              GestureDetector(
+                onTap: () => tp.setAccent(a),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 38, height: 38,
+                  decoration: BoxDecoration(
+                    color: a.color,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: tp.accent == a ? Theme.of(context).textTheme.titleLarge!.color! : Colors.transparent, width: 2.5),
+                    boxShadow: tp.accent == a ? [BoxShadow(color: a.color.withValues(alpha: 0.45), blurRadius: 10)] : [],
+                  ),
+                  child: tp.accent == a ? const Icon(Icons.check, color: Colors.white, size: 18) : null,
+                ),
+              ),
+          ]),
+        ),
+        Divider(height: 1, indent: 16, endIndent: 16, color: Theme.of(context).dividerColor.withValues(alpha: 0.12)),
+        SwitchListTile(
+          title: Text(strings.get('animations')),
+          subtitle: Text(strings.get('animations_desc')),
+          secondary: Icon(Icons.animation_rounded, color: tp.accent.color),
+          value: tp.animationsEnabled,
+          onChanged: (v) => tp.setAnimations(v),
+        ),
+        SwitchListTile(
+          title: Text(strings.get('dark_mode')),
+          subtitle: Text(tp.isDark ? strings.get('dark_mode_on') : strings.get('light_mode_on')),
+          secondary: Icon(tp.isDark ? Icons.dark_mode_rounded : Icons.wb_sunny_rounded, color: tp.accent.color),
+          value: tp.isDark,
+          onChanged: (_) => tp.toggleDarkLight(),
+        ),
+        const SizedBox(height: 6),
+      ]),
+    );
+  }
+
+  Future<void> _sendTestPush() async {
+    await NotificationService.instance.showTest();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_strings.get('test_push_sent'))));
   }
 }
