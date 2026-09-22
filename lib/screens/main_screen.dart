@@ -47,7 +47,15 @@ class _MainScreenState extends State<MainScreen> {
       ),
       drawer: _buildDrawer(context, strings),
       body: tp.animationsEnabled
-          ? AnimatedSwitcher(duration: const Duration(milliseconds: 220), switchInCurve: Curves.easeOutCubic, switchOutCurve: Curves.easeInCubic, child: KeyedSubtree(key: ValueKey(_currentIndex), child: _pageAt(_currentIndex)))
+          ? AnimatedSwitcher(
+              duration: const Duration(milliseconds: 280),
+              switchInCurve: Curves.easeOutCubic,
+              switchOutCurve: Curves.easeInCubic,
+              transitionBuilder: (child, anim) {
+                final slide = Tween<Offset>(begin: const Offset(0, 0.04), end: Offset.zero).animate(CurvedAnimation(parent: anim, curve: Curves.easeOutCubic));
+                return FadeTransition(opacity: anim, child: SlideTransition(position: slide, child: child));
+              },
+              child: KeyedSubtree(key: ValueKey(_currentIndex), child: _pageAt(_currentIndex)))
           : _pageAt(_currentIndex),
     );
   }

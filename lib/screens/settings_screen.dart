@@ -535,50 +535,101 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget _appearancePanel(BuildContext context, AppStrings strings) {
     final tp = context.watch<ThemeProvider>();
+    final lang = widget.locale.languageCode;
     return Container(
       decoration: BoxDecoration(color: Theme.of(context).cardTheme.color, borderRadius: BorderRadius.circular(18)),
-      child: Column(children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        // — header
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
           child: Row(children: [
             Icon(Icons.palette_outlined, color: tp.accent.color),
             const SizedBox(width: 10),
-            Expanded(child: Text(strings.get('accent_color'), style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 14))),
+            Expanded(child: Text(strings.get('ready_themes'), style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 14))),
             IconButton(
               tooltip: tp.isDark ? strings.get('switch_to_light') : strings.get('switch_to_dark'),
-              icon: AnimatedSwitcher(duration: const Duration(milliseconds: 350), transitionBuilder: (ch, a) => RotationTransition(turns: Tween<double>(begin: 0.7, end: 1).animate(CurvedAnimation(parent: a, curve: Curves.easeOutBack)), child: ScaleTransition(scale: a, child: ch)), child: Icon(tp.isDark ? Icons.dark_mode_rounded : Icons.wb_sunny_rounded, key: ValueKey(tp.isDark), color: tp.accent.color)),
+              icon: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 400),
+                transitionBuilder: (ch, a) => RotationTransition(
+                  turns: Tween<double>(begin: 0.5, end: 1.0).animate(CurvedAnimation(parent: a, curve: Curves.easeOutBack)),
+                  child: FadeTransition(opacity: a, child: ScaleTransition(scale: a, child: ch)),
+                ),
+                child: Icon(tp.isDark ? Icons.dark_mode_rounded : Icons.wb_sunny_rounded, key: ValueKey(tp.isDark), color: tp.accent.color),
+              ),
               onPressed: () => tp.toggleDarkLight(),
             ),
           ]),
         ),
+        // — preset cards (horizontal scroll)
+        SizedBox(
+          height: 82,
+          child: ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            scrollDirection: Axis.horizontal,
+            itemCount: AppPreset.presets.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            itemBuilder: (_, i) {
+              final pr = AppPreset.presets[i];
+              final selected = tp.preset.id == pr.id;
+              return GestureDetector(
+                onTap: () => tp.setPreset(pr),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 280),
+                  curve: Curves.easeOutCubic,
+                  width: 92,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: pr.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: selected ? pr.accent.color : Colors.transparent, width: 2.5),
+                    boxShadow: selected ? [BoxShadow(color: pr.accent.color.withValues(alpha: 0.35), blurRadius: 12, offset: const Offset(0, 4))] : [],
+                  ),
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    AnimatedScale(scale: selected ? 1.15 : 1.0, duration: const Duration(milliseconds: 250), child: CircleAvatar(radius: 14, backgroundColor: pr.accent.color, child: selected ? const Icon(Icons.check, size: 14, color: Colors.white) : null)),
+                    const SizedBox(height: 6),
+                    Text(pr.label(lang), style: TextStyle(fontSize: 11, fontWeight: selected ? FontWeight.w700 : FontWeight.w500, color: pr.gradient[0].computeLuminance() > 0.4 ? const Color(0xFF1A1E2E) : Colors.white)),
+                  ]),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 12),
+        // — accent dots
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+          child: Text(strings.get('accent_color'), style: Theme.of(context).textTheme.bodySmall),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
           child: Wrap(spacing: 10, runSpacing: 10, children: [
             for (final a in AppAccent.values)
               GestureDetector(
                 onTap: () => tp.setAccent(a),
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOutCubic,
                   width: 38, height: 38,
                   decoration: BoxDecoration(
                     color: a.color,
                     shape: BoxShape.circle,
                     border: Border.all(color: tp.accent == a ? Theme.of(context).textTheme.titleLarge!.color! : Colors.transparent, width: 2.5),
-                    boxShadow: tp.accent == a ? [BoxShadow(color: a.color.withValues(alpha: 0.45), blurRadius: 10)] : [],
+                    boxShadow: tp.accent == a ? [BoxShadow(color: a.color.withValues(alpha: 0.5), blurRadius: 12, spreadRadius: 1)] : [],
                   ),
-                  child: tp.accent == a ? const Icon(Icons.check, color: Colors.white, size: 18) : null,
+                  child: AnimatedScale(scale: tp.accent == a ? 1.0 : 0.0, duration: const Duration(milliseconds: 200), child: const Icon(Icons.check, color: Colors.white, size: 16)),
                 ),
               ),
           ]),
         ),
         Divider(height: 1, indent: 16, endIndent: 16, color: Theme.of(context).dividerColor.withValues(alpha: 0.12)),
+        // — animations toggle
         SwitchListTile(
           title: Text(strings.get('animations')),
           subtitle: Text(strings.get('animations_desc')),
-          secondary: Icon(Icons.animation_rounded, color: tp.accent.color),
+          secondary: AnimatedRotation(turns: tp.animationsEnabled ? 0.0 : -0.1, duration: const Duration(milliseconds: 300), child: Icon(Icons.animation_rounded, color: tp.accent.color)),
           value: tp.animationsEnabled,
           onChanged: (v) => tp.setAnimations(v),
         ),
+        // — dark/light toggle
         SwitchListTile(
           title: Text(strings.get('dark_mode')),
           subtitle: Text(tp.isDark ? strings.get('dark_mode_on') : strings.get('light_mode_on')),
@@ -592,8 +643,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _sendTestPush() async {
-    await NotificationService.instance.showTest();
+    final ok = await NotificationService.instance.showTest();
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_strings.get('test_push_sent'))));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(ok ? _strings.get('test_push_sent') : _strings.get('test_push_fail')),
+      backgroundColor: ok ? null : Theme.of(context).colorScheme.error,
+    ));
   }
 }

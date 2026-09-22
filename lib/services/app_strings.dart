@@ -798,6 +798,8 @@ class AppStrings {
       'test_push': {'ru': 'Тест push-уведомления', 'en': 'Test push notification', 'uk': 'Тест push-сповіщення'},
       'test_push_desc': {'ru': 'Отправить тестовое уведомление (потом удалим)', 'en': 'Send test notification (temporary)', 'uk': 'Надіслати тестове сповіщення (тимчасово)'},
       'test_push_sent': {'ru': 'Тестовое уведомление отправлено', 'en': 'Test notification sent', 'uk': 'Тестове сповіщення надіслано'},
+      'test_push_fail': {'ru': 'Не удалось показать уведомление — проверь разрешение', 'en': 'Failed to show notification — check permission', 'uk': 'Не вдалося показати сповіщення — перевір дозвіл'},
+      'ready_themes': {'ru': 'Готовые темы', 'en': 'Presets', 'uk': 'Готові теми'},
     };
     return values[key]?[locale.languageCode] ?? values[key]?['ru'] ?? key;
   }
