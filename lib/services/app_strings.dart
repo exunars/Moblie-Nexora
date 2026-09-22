@@ -697,6 +697,16 @@ class AppStrings {
         'en': 'Bot',
         'uk': 'Бот'
       },
+      'telegram_channel': {
+        'ru': 'Telegram-канал',
+        'en': 'Telegram channel',
+        'uk': 'Telegram-канал'
+      },
+      'telegram_channel_handle': {
+        'ru': '@nexora1official',
+        'en': '@nexora1official',
+        'uk': '@nexora1official'
+      },
       'open_link_failed': {
         'ru': 'Не удалось открыть ссылку',
         'en': 'Failed to open link',

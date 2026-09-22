@@ -110,6 +110,13 @@ class AccountSectionScreen extends StatelessWidget {
                           strings.get('official_email'),
                           strings.get('email_address'),
                           'mailto:support@nexora.date'),
+                      const SizedBox(height: 10),
+                      _contactButton(
+                          context,
+                          Icons.campaign_outlined,
+                          strings.get('telegram_channel'),
+                          strings.get('telegram_channel_handle'),
+                          'https://t.me/nexora1official'),
                     ]))),
         const SizedBox(height: 16),
         _legalPanel(context, strings.get('user_agreement'),
