@@ -94,7 +94,9 @@ class ThemeProvider extends ChangeNotifier {
     if (m == 'system') _mode = ThemeMode.system;
     final a = p.getString(_kAccent);
     if (a != null) {
-      for (final v in AppAccent.values) if (v.name == a) _accent = v;
+      for (final v in AppAccent.values) {
+        if (v.name == a) _accent = v;
+      }
     }
     final pr = p.getString(_kPreset);
     if (pr != null) _preset = AppPreset.byId(pr);

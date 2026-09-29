@@ -26,7 +26,6 @@ class ChartScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    final accent = Theme.of(context).colorScheme.primary;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(

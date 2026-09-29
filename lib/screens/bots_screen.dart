@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../services/app_strings.dart';
-import '../theme/trade_theme.dart';
 
 class BotsScreen extends StatefulWidget {
   const BotsScreen({super.key, required this.locale});

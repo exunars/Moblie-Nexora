@@ -50,31 +50,31 @@ class TradeProvider extends ChangeNotifier {
   void _initializeMockData() {
     // Инициализация тестовых данных
     _assets = [
-      Asset(
+      const Asset(
         symbol: 'BTC',
         price: 64230.50,
         change24h: 1250.30,
         changePercent: 2.0,
       ),
-      Asset(
+      const Asset(
         symbol: 'ETH',
         price: 3450.75,
         change24h: -45.20,
         changePercent: -1.3,
       ),
-      Asset(
+      const Asset(
         symbol: 'SOL',
         price: 145.20,
         change24h: 12.5,
         changePercent: 9.4,
       ),
-      Asset(
+      const Asset(
         symbol: 'XRP',
         price: 0.62,
         change24h: 0.03,
         changePercent: 5.1,
       ),
-      Asset(
+      const Asset(
         symbol: 'DOGE',
         price: 0.16,
         change24h: 0.005,

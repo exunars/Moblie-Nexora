@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../services/app_strings.dart';
-import '../theme/trade_theme.dart';
 
 enum AccountSection { exchanges, subscription, settings, help }
 

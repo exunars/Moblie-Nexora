@@ -145,7 +145,7 @@ void main() {
 
   group('Asset Model Tests', () {
     test('создание актива', () {
-      final asset = Asset(
+      final asset = const Asset(
         symbol: 'BTC',
         price: 50000.0,
         change24h: 1000.0,

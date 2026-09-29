@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../services/app_strings.dart';
-import '../theme/trade_theme.dart';
 
 class BacktestsScreen extends StatefulWidget {
   const BacktestsScreen({super.key, required this.locale});

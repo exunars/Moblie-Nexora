@@ -207,7 +207,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: SwitchListTile(
               contentPadding: EdgeInsets.zero,
               secondary:
-                  Icon(Icons.smart_toy_outlined, color: TradeColors.accentLime),
+                  const Icon(Icons.smart_toy_outlined, color: TradeColors.accentLime),
               title: const Text('Momentum Bot'),
               subtitle: Text(_botEnabled
                   ? 'Работает по стратегии $_strategy'
@@ -273,18 +273,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   controller: exchangeController,
                   decoration: InputDecoration(
                       labelText: _strings.get('exchange'),
-                      prefixIcon: Icon(Icons.currency_exchange_rounded))),
+                      prefixIcon: const Icon(Icons.currency_exchange_rounded))),
               TextField(
                   controller: keyController,
                   decoration: InputDecoration(
                       labelText: _strings.get('api_key'),
-                      prefixIcon: Icon(Icons.key_rounded))),
+                      prefixIcon: const Icon(Icons.key_rounded))),
               TextField(
                   controller: secretController,
                   obscureText: true,
                   decoration: InputDecoration(
                       labelText: _strings.get('api_secret'),
-                      prefixIcon: Icon(Icons.lock_outline_rounded))),
+                      prefixIcon: const Icon(Icons.lock_outline_rounded))),
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
                 title: Text(_strings.get('testnet')),

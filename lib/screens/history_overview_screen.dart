@@ -142,9 +142,9 @@ class _HistoryOverviewScreenState extends State<HistoryOverviewScreen> {
 
   Widget _tableHeader(BuildContext context) {
     const style = TextStyle(fontSize: 11, fontWeight: FontWeight.w700, letterSpacing: 0.6);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: Row(children: const [
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Row(children: [
         SizedBox(width: 32),
         Expanded(flex: 2, child: Text('ПАРА / ТИП', style: style)),
         Expanded(child: Text('КОЛ-ВО', style: style)),

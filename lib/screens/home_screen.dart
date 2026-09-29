@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
     final strings = AppStrings(locale);
     final isWide = MediaQuery.sizeOf(context).width >= 900;
     final accent = Theme.of(context).colorScheme.primary;
-    final bg = Theme.of(context).scaffoldBackgroundColor;
 
     return Scaffold(
       body: Container(
